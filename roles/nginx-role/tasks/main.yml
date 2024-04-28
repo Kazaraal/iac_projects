@@ -1,0 +1,49 @@
+---
+# tasks file for nginx-role
+
+# Update and upgrade apt packages
+- name: Update and upgrade apt packages
+  become: true
+  ansible.builtin.apt:
+    update_cache: yes
+    cache_valid_time: 3600
+    upgrade: yes
+
+# Install nginx to version {{ nginx_version }}
+- name: Install nginx to version {{ nginx_version }}
+  become: true
+  ansible.builtin.apt:
+    name: "nginx={{ nginx_version }}"
+    state: present
+  notify: Starting nginx
+
+
+# Copy nginx configuration file to the host
+- name: Copy nginx configuration file to the host
+  become: true
+  ansible.builtin.template:
+    src: templates/nginx.conf.j2
+    dest: /etc/nginx/sites-available/default
+
+# Create a symbolic link to enable the new configuration
+- name: Create a symbolic link to enable the new configuration
+  become: true
+  ansible.builtin.file:
+    src: /etc/nginx/sites-available/default
+    dest: /etc/nginx/sites-enabled/default
+    state: link
+
+# Create nginx directory
+- name: Create nginx directory
+  become: true
+  ansible.builtin.file:
+    path: "{{ nginx_custom_directory }}"
+    state: directory
+
+# Copy index.html to the nginx directory of the host
+- name: Copy index.html to the nginx directory of the host
+  become: true
+  ansible.builtin.copy:
+    src: files/index.html
+    dest: "{{ nginx_custom_directory }}/index.html"
+  notify: Restart the nginx service

@@ -1,0 +1,4 @@
+---
+# defaults file for nginx-role
+nginx_version: 1.24.0
+nginx_custom_directory: /var/www/html
