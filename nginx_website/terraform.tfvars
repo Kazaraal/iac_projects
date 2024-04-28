@@ -1,0 +1,7 @@
+region="eu-west-2"
+project_name="kk-nginx-project" 
+vpc_cidr="10.0.0.0/16"
+public_subnet_az1_cidr="10.0.0.0/24"
+ssh_user="ubuntu"
+key_name="nginx-ansible-terraform"
+public_key_path="/home/ken0/Downloads/nginx-ansible-terraform.pem"
